@@ -74,12 +74,22 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 
 	// request a read lock from the server
 	public static Object lock_read(int id) {
-		return server.lock_read(id,client);
+		try {
+			return server.lock_read(id,client);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	// request a write lock from the server
 	public static Object lock_write (int id) {
-		return server.lock_write(id,client);
+		try {
+			return server.lock_write(id,client);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	// receive a lock reduction request from the server
