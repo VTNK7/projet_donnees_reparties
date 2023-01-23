@@ -12,7 +12,6 @@ public class SharedObject implements Serializable, SharedObject_itf {
 	private T_state state;
 	private boolean attendre;
 
-	//TEST
 
 	public Object obj;
 
@@ -20,6 +19,11 @@ public class SharedObject implements Serializable, SharedObject_itf {
 
 	public SharedObject(Object object, int id) {
 		this.id = id;
+		this.obj = object;
+		this.state = T_state.NL;
+		this.attendre = false;
+		this.prio = new ReentrantLock();
+		this.cond = prio.newCondition();
     }
 
     // invoked by the user program on the client node
@@ -82,6 +86,9 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				System.out.println("Choix incorrect unlock");
 				break;
 		}
+
+		cond.signal(); //signaler les fil d'attente en invalidation
+
 		prio.unlock();
 
 	}
@@ -95,6 +102,15 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				state = T_state.RLT;
 				break;
 			case WLT:
+				//state = T_state.RLC; // j'ai limpression quon peut pas faire ça
+				while (state == T_state.WLT) {
+					try {
+						cond.await();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
 				state = T_state.RLC;
 				break;
 			case WLC:
