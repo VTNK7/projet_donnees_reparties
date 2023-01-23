@@ -30,7 +30,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 
     public int create(Object o) throws RemoteException {
         int id = o.hashCode(); // il est possible qu'un hashcode ne soit pas unique néanmoins c'est très peu
-                               // probableimport java.time.Clock;
+                               // probable
         server_objects.put(id,new ServerObject(o, id));
         return id;
     }

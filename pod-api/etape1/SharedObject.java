@@ -75,7 +75,6 @@ public class SharedObject implements Serializable, SharedObject_itf {
 		switch(state){
 			case RLT_WLC: 
 				state = T_state.RLT;
-				obj = Client.lock_read(id);
 				break;
 			case WLT:
 				state = T_state.RLC;
@@ -87,6 +86,7 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				System.out.println("Choix incorrect reduce_lock");
 				break;
 		}
+		return obj;
 		prio.unlock();
 	}
 
@@ -94,25 +94,34 @@ public class SharedObject implements Serializable, SharedObject_itf {
 	public synchronized void invalidate_reader() {
 		prio.lock();
 		switch(state){
-			case RLT_WLC: 
-				state = T_state.RLT;
-				obj = Client.lock_read(id);
+			case RLC: 
+				state = T_state.NL;
 				break;
-			case WLT:
-				state = T_state.RLC;
-				break;
-			case WLC:
-				state = T_state.RLC;
+			case RLT:
+				state = T_state.NL;
 				break;
 			default:
-				System.out.println("Choix incorrect reduce_lock");
-				break;
+				System.out.println("Choix incorrect invalidate_reader");
 		}
 		prio.unlock();
 	}
 
 	public synchronized Object invalidate_writer() {
-		if (state == T_state.RLC)
+		prio.lock();
+		switch(state){
+			case WLC: 
+				state = T_state.NL;
+				break;
+			case WLT:
+				state = T_state.NL;
+				break;
+			case RLT_WLC:
+				state = T_state.NL;
+				break;
+			default:
+				System.out.println("Choix incorrect invalidate_reader");
+		}
+		prio.unlock();
 	}
 
     public int getId() {
