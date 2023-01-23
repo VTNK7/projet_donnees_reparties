@@ -2,13 +2,13 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class ServerObject {
-    public enum lockType {NL, WL, RL};
+    public enum T_state {NL, WL, RL};
 
-	private Client_itf ecrivain;
+	private Client_itf writer;
 
-	private ArrayList<Client_itf> lecteurs;
+	private ArrayList<Client_itf> readers;
 
-	private lockType lock;
+	private T_state state;
 
 	private int id;
 
@@ -17,21 +17,21 @@ public class ServerObject {
 	public ServerObject(Object o, int id) {
 		this.obj = o;
 		this.id = id;
-		this.lock = lockType.NL;
-		this.ecrivain = null;
-		this.lecteurs = new ArrayList<Client_itf>();
+		this.state = T_state.NL;
+		this.writer = null;
+		this.readers = new ArrayList<Client_itf>();
 	}
 
 	// invoked by the user program on the client node
 	public void lock_read(Client_itf client) {
 		try {
-			if (lock == lockType.WL) {
-				obj = ecrivain.reduce_lock(id);
-				lecteurs.add(ecrivain);
+			if (state == T_state.WL) {
+				obj = writer.reduce_lock(id);
+				readers.add(writer);
 			}
-			ecrivain = null;
-			lecteurs.add(client);
-			lock = lockType.RL;
+			writer = null;
+			readers.add(client);
+			state = T_state.RL;
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -39,27 +39,27 @@ public class ServerObject {
 
 	// invoked by the user program on the client node
 	public void lock_write(Client_itf client) {
-		if (lock == lockType.RL) {
-			lecteurs.remove(client);
-			for (Client_itf lecteur : lecteurs) {
+		if (state == T_state.RL) {
+			readers.remove(client);
+			for (Client_itf lecteur : readers) {
 				try {
-					lecteur.invalidate_reader(id);
+					readers.invalidate_reader(id);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}	
 			}
 		}
 
-		if (lock == lockType.WL) {
+		if (state == T_state.WL) {
 			try {
-				obj = ecrivain.invalidate_writer(id);
+				obj = writer.invalidate_writer(id);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 		}
 
-		lecteurs.clear();
-		ecrivain = client;
-		lock = lockType.WL;
+		readers.clear();
+		writer = client;
+		state = T_state.WL;
 	}
 }
