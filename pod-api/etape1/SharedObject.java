@@ -12,7 +12,7 @@ public class SharedObject implements Serializable, SharedObject_itf {
 	private T_state state;
 	private boolean attendre;
 
-
+	//TEST
 
 	public Object obj;
 
