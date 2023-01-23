@@ -62,4 +62,6 @@ public class ServerObject {
 		writer = client;
 		state = T_state.WL;
 	}
+
+
 }
