@@ -11,7 +11,7 @@ import java.time.Clock;
 
 public class Server extends UnicastRemoteObject implements Server_itf {
 
-    private ArrayList<ServerObject> server_objects;
+    private HashMap<Integer,ServerObject> server_objects;
 
     private HashMap<String, Integer> table;
 
@@ -31,12 +31,12 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     public int create(Object o) throws RemoteException {
         int id = o.hashCode(); // il est possible qu'un hashcode ne soit pas unique néanmoins c'est très peu
                                // probableimport java.time.Clock;
-        server_objects.add(new ServerObject(o, id));
+        server_objects.put(id,new ServerObject(o, id));
         return id;
     }
 
     public Object lock_read(int id, Client_itf client) throws RemoteException {
-        return null;
+        server_objects.get(id).lock_read(client);
     }
 
     public Object lock_write(int id, Client_itf client) throws RemoteException {
