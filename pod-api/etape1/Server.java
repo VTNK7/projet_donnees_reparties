@@ -44,9 +44,9 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 
     public static void main(String[] args) throws MalformedURLException, RemoteException, AlreadyBoundException {
         try {
-            Registry registre = LocateRegistry.createRegistry(4000);
+            Registry registre = LocateRegistry.createRegistry(1888);
         } catch (Exception e) {
         }
-        Naming.bind("//localhost:8080/server", new Server());
+        Naming.bind("//localhost:1888/server", new Server());
     }
 }
