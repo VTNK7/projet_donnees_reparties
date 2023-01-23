@@ -120,8 +120,8 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				System.out.println("Choix incorrect reduce_lock");
 				break;
 		}
-		return obj;
 		prio.unlock();
+		return obj;
 	}
 
 	// callback invoked remotely by the server
@@ -158,6 +158,7 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				// ajouter les wait
 		}
 		prio.unlock();
+		return obj;
 	}
 
     public int getId() {

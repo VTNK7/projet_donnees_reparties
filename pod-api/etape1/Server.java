@@ -44,12 +44,13 @@ public class Server extends UnicastRemoteObject implements Server_itf {
         return server_objects.get(id).obj;
     }
 
-    public static void main(String[] args) throws MalformedURLException, RemoteException, AlreadyBoundException {
+    public static void main(String[] args) {
         try {
             Registry registre = LocateRegistry.createRegistry(3000);
+            Naming.bind("//localhost:3000/server", new Server());
         } catch (Exception e) {
         }
-        Naming.bind("//localhost:3000/server", new Server());
+        
 
         Clock clock = Clock.systemUTC();
          
