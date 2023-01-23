@@ -7,6 +7,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.Clock;
 
 public class Server extends UnicastRemoteObject implements Server_itf {
 
@@ -29,7 +30,7 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 
     public int create(Object o) throws RemoteException {
         int id = o.hashCode(); // il est possible qu'un hashcode ne soit pas unique néanmoins c'est très peu
-                               // probable
+                               // probableimport java.time.Clock;
         server_objects.add(new ServerObject(o, id));
         return id;
     }
@@ -44,9 +45,15 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 
     public static void main(String[] args) throws MalformedURLException, RemoteException, AlreadyBoundException {
         try {
-            Registry registre = LocateRegistry.createRegistry(1888);
+            Registry registre = LocateRegistry.createRegistry(3000);
         } catch (Exception e) {
         }
-        Naming.bind("//localhost:1888/server", new Server());
+        Naming.bind("//localhost:3000/server", new Server());
+
+        Clock clock = Clock.systemUTC();
+         
+        // getting the current instant defined by clock
+        System.out.println("UTC time = " + clock.instant());
+
     }
 }
