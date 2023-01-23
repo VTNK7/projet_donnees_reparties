@@ -41,9 +41,9 @@ public class ServerObject {
 	public void lock_write(Client_itf client) {
 		if (state == T_state.RL) {
 			readers.remove(client);
-			for (Client_itf lecteur : readers) {
+			for (Client_itf reader : readers) {
 				try {
-					readers.invalidate_reader(id);
+					reader.invalidate_reader(id);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}	
