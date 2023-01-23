@@ -49,6 +49,23 @@ public class SharedObject implements Serializable, SharedObject_itf {
 
 	// invoked by the user program on the client node
 	public synchronized void unlock() {
+		prio.lock();
+		switch(state){
+			case RLT_WLC: 
+				state = T_state.WLC;
+				break;
+			case RLT:
+				state = T_state.RLC;
+				break;
+			case WLT:
+				state = T_state.WLC;
+				break;
+			default:
+				System.out.println("Choix incorrect unlock");
+				break;
+		}
+		prio.unlock();
+
 	}
 
 
@@ -75,10 +92,27 @@ public class SharedObject implements Serializable, SharedObject_itf {
 
 	// callback invoked remotely by the server
 	public synchronized void invalidate_reader() {
+		prio.lock();
+		switch(state){
+			case RLT_WLC: 
+				state = T_state.RLT;
+				obj = Client.lock_read(id);
+				break;
+			case WLT:
+				state = T_state.RLC;
+				break;
+			case WLC:
+				state = T_state.RLC;
+				break;
+			default:
+				System.out.println("Choix incorrect reduce_lock");
+				break;
+		}
+		prio.unlock();
 	}
 
 	public synchronized Object invalidate_writer() {
-		return id;
+		if (state == T_state.RLC)
 	}
 
     public int getId() {
