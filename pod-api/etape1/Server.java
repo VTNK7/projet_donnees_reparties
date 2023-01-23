@@ -12,11 +12,10 @@ import java.time.Clock;
 public class Server extends UnicastRemoteObject implements Server_itf {
 
     private HashMap<Integer,ServerObject> server_objects;
-
     private HashMap<String, Integer> table;
 
     protected Server() throws RemoteException {
-        server_objects = new ArrayList<ServerObject>();
+        server_objects = new HashMap<Integer,ServerObject>();
         table = new HashMap<String, Integer>();
     }
 
@@ -37,10 +36,12 @@ public class Server extends UnicastRemoteObject implements Server_itf {
 
     public Object lock_read(int id, Client_itf client) throws RemoteException {
         server_objects.get(id).lock_read(client);
+        return server_objects.get(id).obj;
     }
 
     public Object lock_write(int id, Client_itf client) throws RemoteException {
-        return null;
+        server_objects.get(id).lock_write(client);
+        return server_objects.get(id).obj;
     }
 
     public static void main(String[] args) throws MalformedURLException, RemoteException, AlreadyBoundException {

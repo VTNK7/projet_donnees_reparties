@@ -79,7 +79,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 
 	// request a write lock from the server
 	public static Object lock_write (int id) {
-		return id;
+		return server.lock_write(id,client);
 	}
 
 	// receive a lock reduction request from the server
