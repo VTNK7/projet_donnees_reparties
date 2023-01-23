@@ -8,7 +8,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 
 	private static HashMap<Integer,SharedObject> client_objects;
 
-	private static Client instance;
+	private static Client client;
 
 	private static Server_itf server;
 
@@ -25,7 +25,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	// initialization of the client layer
 	public static void init() {
 		try {
-			Client.instance = new Client();
+			Client.client = new Client();
 			server = (Server_itf) Naming.lookup("//localhost:3000/server");
 			client_objects = new HashMap<Integer,SharedObject>();
 		} catch (Exception e) {
@@ -74,7 +74,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 
 	// request a read lock from the server
 	public static Object lock_read(int id) {
-		return id;
+		return server.lock_read(id,client);
 	}
 
 	// request a write lock from the server
@@ -84,7 +84,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 
 	// receive a lock reduction request from the server
 	public Object reduce_lock(int id) throws java.rmi.RemoteException {
-		return id;
+		return client_objects.get(id).reduce_lock();
 	}
 
 
