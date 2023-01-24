@@ -120,8 +120,8 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				System.out.println("Choix incorrect reduce_lock");
 				break;
 		}
-		prio.unlock();
 		return obj;
+		prio.unlock();
 	}
 
 	// callback invoked remotely by the server
@@ -132,7 +132,18 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				state = T_state.NL;
 				break;
 			case RLT:
-				state = T_state.NL;
+
+				while (state == T_state.WLT) {
+					try {
+						cond.await();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				if (state != T_state RLC){
+					state = T_state.NL;
+				}
 				break;
 			default:
 				System.out.println("Choix incorrect invalidate_reader");
@@ -147,9 +158,23 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				state = T_state.NL;
 				break;
 			case WLT:
+				while(state==T_state.WLT||state==T_state.RLT_WLC){
+					try{		   
+					 	cond.await();	
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}
+				}
 				state = T_state.NL;
 				break;
 			case RLT_WLC:
+				while(state==T_state.WLT||state==T_state.RLT_WLC){
+					try{		   
+						 cond.await();	
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}
+				}
 				state = T_state.NL;
 				break;
 			default:
