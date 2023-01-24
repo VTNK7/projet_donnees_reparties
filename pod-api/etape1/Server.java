@@ -45,17 +45,16 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     }
 
     public static void main(String[] args) {
+        Clock clock = Clock.systemUTC();
         try {
             Registry registre = LocateRegistry.createRegistry(3000);
             Naming.bind("//localhost:3000/server", new Server());
+            
+            while (true){
+            Thread.sleep(5000);
+            System.out.println("Server running " + clock.instant());
+        }
         } catch (Exception e) {
         }
-        
-
-        Clock clock = Clock.systemUTC();
-         
-        // getting the current instant defined by clock
-        System.out.println("UTC time = " + clock.instant());
-
     }
 }

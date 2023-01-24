@@ -120,8 +120,8 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				System.out.println("Choix incorrect reduce_lock");
 				break;
 		}
-		return obj;
 		prio.unlock();
+		return obj;
 	}
 
 	// callback invoked remotely by the server
@@ -141,7 +141,7 @@ public class SharedObject implements Serializable, SharedObject_itf {
 					}
 				}
 
-				if (state != T_state RLC){
+				if (state != T_state.RLC){ //a quoi sert le if ?
 					state = T_state.NL;
 				}
 				break;
@@ -190,7 +190,7 @@ public class SharedObject implements Serializable, SharedObject_itf {
         return this.id;
     }
 
-	public int getSharedObject() {
+	public Object getSharedObject() {
         return this.obj;
     }
 }
