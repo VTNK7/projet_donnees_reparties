@@ -20,10 +20,16 @@ public class Server extends UnicastRemoteObject implements Server_itf {
     }
 
     public int lookup(String name) throws RemoteException {
-        return table.get(name);
+        System.out.println(name);
+        System.out.println("id : " + table.get(name));
+        if(table.containsKey(name)){
+            return table.get(name);
+        }
+        return 0;
     }
 
     public void register(String name, int id) throws RemoteException {
+        
         table.put(name, id);
     }
 

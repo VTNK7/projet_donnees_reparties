@@ -53,11 +53,11 @@ public class SharedObject implements Serializable, SharedObject_itf {
 		switch(state){
 			case NL: 
 				state = T_state.WLT;
-				obj = Client.lock_read(id);
+				obj = Client.lock_write(id);
 				break;
 			case RLC:
 				state = T_state.WLT;
-				obj = Client.lock_read(id);
+				obj = Client.lock_write(id);
 				break;
 			case WLC:
 				state = T_state.WLT;
