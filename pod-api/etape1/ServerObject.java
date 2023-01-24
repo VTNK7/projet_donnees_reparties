@@ -29,11 +29,13 @@ public class ServerObject {
 				obj = writer.reduce_lock(id);
 				readers.add(writer);
 			}
+			
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} finally {
 			writer = null;
 			readers.add(client);
 			state = T_state.RL;
-		} catch (RemoteException e) {
-			e.printStackTrace();
 		}
 	}
 

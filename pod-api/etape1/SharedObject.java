@@ -133,7 +133,7 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				break;
 			case RLT:
 
-				while (state == T_state.WLT) {
+				while (state == T_state.RLT) {
 					try {
 						cond.await();
 					} catch (InterruptedException e) {
@@ -141,7 +141,7 @@ public class SharedObject implements Serializable, SharedObject_itf {
 					}
 				}
 
-				if (state != T_state.RLC){ //a quoi sert le if ?
+				if (state == T_state.RLC) { //a quoi sert le if ?
 					state = T_state.NL;
 				}
 				break;
