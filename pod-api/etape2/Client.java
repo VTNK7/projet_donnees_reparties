@@ -51,7 +51,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 				return null;
 			} else {
                 if (server_objects.containsKey(id)){
-                    return objects.get(id);
+                    return server_objects.get(id);
                 }
                 else {
                     Object o = server.lock_read(id, instance);
