@@ -44,14 +44,12 @@ public class Client extends UnicastRemoteObject implements Client_itf {
         int id;
 		try {
 			
-			System.out.println("lookup server");
 			id = server.lookup(name);
-			System.out.println("identifiant  : " + id);
 			if (id == 0){
 				return null;
 			} else {
-                if (server_objects.containsKey(id)){
-                    return objects.get(id);
+                if (client_objects.containsKey(id)){
+                    return client_objects.get(id);
                 }
                 else {
                     SharedObject so = new SharedObject(null, id);
@@ -60,7 +58,7 @@ public class Client extends UnicastRemoteObject implements Client_itf {
                 }
             }
 		} catch (Exception e) {
-			System.out.println("FAIL LOOKUP");
+
 			e.printStackTrace();
             return null;
 		}
