@@ -1,7 +1,10 @@
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.rmi.registry.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 
 public class Client extends UnicastRemoteObject implements Client_itf {
