@@ -29,10 +29,11 @@ public class SharedObject implements Serializable, SharedObject_itf {
     // invoked by the user program on the client node
 	public void lock_read() {
 		prio.lock();
+		boolean bool = false;
 		switch(state){
 			case NL: 
 				state = T_state.RLT;
-				obj = Client.lock_read(id);
+				bool = true;
 				break;
 			case RLC:
 				state = T_state.RLT;
@@ -45,19 +46,24 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				break;
 		}
 		prio.unlock();
+
+		if (bool){
+            obj = Client.lock_write(id);
+        }
 	}
 
 	// invoked by the user program on the client node
 	public void lock_write() {
 		prio.lock();
+		boolean bool = false;
 		switch(state){
 			case NL: 
 				state = T_state.WLT;
-				obj = Client.lock_write(id);
+				bool = true;
 				break;
 			case RLC:
 				state = T_state.WLT;
-				obj = Client.lock_write(id);
+				bool = true;
 				break;
 			case WLC:
 				state = T_state.WLT;
@@ -67,6 +73,10 @@ public class SharedObject implements Serializable, SharedObject_itf {
 				break;
 		}
 		prio.unlock();
+
+		if (bool){
+            obj = Client.lock_write(id);
+        }
 	}
 
 	// invoked by the user program on the client node
