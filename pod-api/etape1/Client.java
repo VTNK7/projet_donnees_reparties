@@ -41,25 +41,30 @@ public class Client extends UnicastRemoteObject implements Client_itf {
 	
 	// lookup in the name server
 	public static SharedObject lookup(String name) {
-
+        int id;
 		try {
-			int id;
+			
 			System.out.println("lookup server");
 			id = server.lookup(name);
 			System.out.println("identifiant  : " + id);
 			if (id == 0){
 				return null;
-				
-			}
-			SharedObject so = new SharedObject(null, id);
-			client_objects.put(id, so);
-			return so;
-			
+			} else {
+                if (server_objects.containsKey(id)){
+                    return objects.get(id);
+                }
+                else {
+                    SharedObject so = new SharedObject(null, id);
+                    client_objects.put(id, so);
+                    return so;
+                }
+            }
 		} catch (Exception e) {
 			System.out.println("FAIL LOOKUP");
 			e.printStackTrace();
+            return null;
 		}
-		return null;
+		
 	}
 	
 	// binding in the name server
